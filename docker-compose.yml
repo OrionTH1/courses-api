@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: desafio-node
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
