@@ -1,9 +1,10 @@
 import { resourceUsage } from "process";
 import { db } from "../database/client";
 import { courses } from "../database/schema";
-import { asc, eq, ilike } from "drizzle-orm";
+import { asc, eq, ilike, SQL } from "drizzle-orm";
 import z from "zod";
 import { CourseSchemaType, OrderByCourseSchemaType } from "../types/types";
+import { and } from "drizzle-orm";
 
 export const getAllCourses = async (
   orderBy: OrderByCourseSchemaType,
@@ -12,15 +13,23 @@ export const getAllCourses = async (
 ) => {
   const limit = 20;
 
-  const result = await db
-    .select()
-    .from(courses)
-    .where(search ? ilike(courses.title, `%${search}%`) : undefined)
-    .orderBy(asc(courses[orderBy]))
-    .limit(limit)
-    .offset((page - 1) * limit);
+  const conditions: SQL[] = [];
 
-  return result;
+  if (search) {
+    conditions.push(ilike(courses.title, `%${search}%`));
+  }
+  const [result, total] = await Promise.all([
+    db
+      .select()
+      .from(courses)
+      .where(and(...conditions))
+      .orderBy(asc(courses[orderBy]))
+      .limit(limit)
+      .offset((page - 1) * limit),
+    db.$count(courses, and(...conditions)),
+  ]);
+
+  return { course: result, total };
 };
 
 export const getCourseById = async (id: string) => {

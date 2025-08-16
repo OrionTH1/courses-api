@@ -20,6 +20,7 @@ export const getAllCoursesRoute: FastifyPluginAsyncZod = async (server) => {
           200: z
             .object({
               courses: z.array(courseSchema),
+              total: z.number(),
             })
             .describe("Response payload containing a list of courses."),
         },
@@ -28,9 +29,9 @@ export const getAllCoursesRoute: FastifyPluginAsyncZod = async (server) => {
     },
     async (request, reply) => {
       const { search, orderBy, page } = request.query;
-      const courses = await getAllCourses(orderBy, page, search);
+      const result = await getAllCourses(orderBy, page, search);
 
-      return reply.send({ courses });
+      return reply.send({ courses: result.course, total: result.total });
     },
   );
 };
