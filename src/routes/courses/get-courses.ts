@@ -2,7 +2,7 @@ import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { getAllCourses } from "../../services/courses";
 
 import { z } from "zod";
-import { courseSchema, orderByCourseSchema } from "../../schemas";
+import { courseDTO, orderByCourseSchema, returnCourseDTO } from "../../schemas";
 
 export const getAllCoursesRoute: FastifyPluginAsyncZod = async (server) => {
   server.get(
@@ -19,7 +19,7 @@ export const getAllCoursesRoute: FastifyPluginAsyncZod = async (server) => {
         response: {
           200: z
             .object({
-              courses: z.array(courseSchema),
+              courses: z.array(returnCourseDTO),
               total: z.number(),
             })
             .describe("Response payload containing a list of courses."),

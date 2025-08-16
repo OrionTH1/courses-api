@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx tsx watch --env-file .env ./src/server.ts"
+    "dev": "npx tsx watch --env-file .env ./src/server.ts",
+    "db:seed": "npx tsx --env-file .env ./src/database/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
     "zod": "^4.0.17"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
     "@types/node": "^24.2.1",
     "tsx": "^4.20.4",
     "typescript": "^5.9.2"

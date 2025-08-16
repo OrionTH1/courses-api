@@ -1,7 +1,7 @@
 import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { getCourseById } from "../../services/courses";
 import { z } from "zod";
-import { courseSchema } from "../../schemas";
+import { courseDTO } from "../../schemas";
 
 export const getCourseByIdRoute: FastifyPluginAsyncZod = async (server) => {
   server.get(
@@ -18,7 +18,7 @@ export const getCourseByIdRoute: FastifyPluginAsyncZod = async (server) => {
             .object({
               courses: z.object({
                 id: z.uuid(),
-                ...courseSchema.shape,
+                ...courseDTO.shape,
               }),
             })
             .describe("Course details"),

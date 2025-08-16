@@ -1,10 +1,7 @@
-import { resourceUsage } from "process";
+import { and, asc, count, eq, ilike, SQL } from "drizzle-orm";
 import { db } from "../database/client";
-import { courses } from "../database/schema";
-import { asc, eq, ilike, SQL } from "drizzle-orm";
-import z from "zod";
+import { courses, enrollments } from "../database/schema";
 import { CourseSchemaType, OrderByCourseSchemaType } from "../types/types";
-import { and } from "drizzle-orm";
 
 export const getAllCourses = async (
   orderBy: OrderByCourseSchemaType,
@@ -20,12 +17,19 @@ export const getAllCourses = async (
   }
   const [result, total] = await Promise.all([
     db
-      .select()
+      .select({
+        id: courses.id,
+        title: courses.title,
+        description: courses.title,
+        enrollments: count(enrollments.id),
+      })
       .from(courses)
+      .leftJoin(enrollments, eq(enrollments.courseId, courses.id))
       .where(and(...conditions))
       .orderBy(asc(courses[orderBy]))
       .limit(limit)
-      .offset((page - 1) * limit),
+      .offset((page - 1) * limit)
+      .groupBy(courses.id),
     db.$count(courses, and(...conditions)),
   ]);
 

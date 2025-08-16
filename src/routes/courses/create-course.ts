@@ -1,7 +1,7 @@
 import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { createCourse } from "../../services/courses";
 import { z } from "zod";
-import { courseSchema } from "../../schemas";
+import { courseDTO } from "../../schemas";
 
 export const createCourseRoute: FastifyPluginAsyncZod = async (server) => {
   server.post(
@@ -11,13 +11,13 @@ export const createCourseRoute: FastifyPluginAsyncZod = async (server) => {
         tags: ["Courses"],
         summary: "Create a new course",
         description: "Create a new course with the given title and description",
-        body: courseSchema,
+        body: courseDTO,
         response: {
           201: z
             .object({
               course: z.object({
                 id: z.uuid(),
-                ...courseSchema.shape,
+                ...courseDTO.shape,
               }),
             })
             .describe("Course created successfully"),
