@@ -17,6 +17,9 @@ importers:
       '@scalar/fastify-api-reference':
         specifier: ^1.34.2
         version: 1.34.2
+      argon2:
+        specifier: ^0.44.0
+        version: 0.44.0
       fastify:
         specifier: ^5.5.0
         version: 5.5.0
