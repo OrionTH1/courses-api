@@ -2,11 +2,13 @@ import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { getCourseById } from "../../services/courses";
 import { z } from "zod";
 import { courseDTO } from "../../schemas";
+import { checkRequestJwt } from "../../hooks/check-request-jwt";
 
 export const getCourseByIdRoute: FastifyPluginAsyncZod = async (server) => {
   server.get(
     "/:id",
     {
+      preHandler: [checkRequestJwt],
       schema: {
         tags: ["Courses"],
         summary: "Get a course by ID",
@@ -22,6 +24,7 @@ export const getCourseByIdRoute: FastifyPluginAsyncZod = async (server) => {
               }),
             })
             .describe("Course details"),
+          401: z.object({}).describe("Unauthorized"),
           404: z
             .object({
               message: z.string(),

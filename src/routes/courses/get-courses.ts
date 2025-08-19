@@ -3,11 +3,13 @@ import { getAllCourses } from "../../services/courses";
 
 import { z } from "zod";
 import { courseDTO, orderByCourseSchema, returnCourseDTO } from "../../schemas";
+import { checkRequestJwt } from "../../hooks/check-request-jwt";
 
 export const getAllCoursesRoute: FastifyPluginAsyncZod = async (server) => {
   server.get(
     "/",
     {
+      preHandler: [checkRequestJwt],
       schema: {
         summary: "Get all courses",
         description: "Retrieve a comprehensive list of all available courses.",
@@ -23,6 +25,7 @@ export const getAllCoursesRoute: FastifyPluginAsyncZod = async (server) => {
               total: z.number(),
             })
             .describe("Response payload containing a list of courses."),
+          401: z.object({}).describe("Unauthorized"),
         },
         tags: ["Courses"],
       },
